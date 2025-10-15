@@ -2,8 +2,8 @@ const CACHE_NAME = 'checkin-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/192.png',
-  '/512.png',
+  'main/192.png',
+  'main/512.png',
   '/manifest.json'
 ];
 
@@ -46,4 +46,5 @@ self.addEventListener('activate', event => {
     )
   );
 });
+
 
