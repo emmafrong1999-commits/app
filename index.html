@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#67bb05">
+  <link rel="icon" href="https://raw.githubusercontent.com/sekartwork-creator/app/main/192.png" type="image/png">
+
+  <title>ระบบเช็คชื่อเข้า-ออกงาน</title>
+  <style>
+    /* ===== Body (จัดกลางทั้งแนวตั้ง/แนวนอน) ===== */
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Kanit', sans-serif;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+ /* ===== โลโก้ + ชื่อบริษัท ===== */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo-container img {
+      width: 120px; /* ปรับขนาดโลโก้ */
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .logo-container h3 {
+      color: #06C755;
+      font-weight: 700;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    
+    /* ===== Header ===== */
+    h1 {
+      color: #06C755;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h3 {
+    color: #06C755;
+    }
+    
+    /* ===== LINE Login ===== */
+    .login-line {
+      font-weight: 700;
+      color: #000;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    /* ===== Dropdown / Textarea ===== */
+    .dropdown-btn, textarea {
+      width: 100%;
+      max-width: 400px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1.5px solid #ccc;     
+      border-radius: 10px;          
+      font-size: 1rem;
+      background: #f9f9f9;          
+      outline: none;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+
+    .dropdown-btn:focus, textarea:focus {
+      border: 1.5px solid #06C755;  
+      background: #fff;
+    }
+
+    /* Placeholder ให้เป็นสีเทาบางๆ */
+    textarea::placeholder {
+      color: #aaa;
+      font-style: italic;
+    }
+
+    textarea {
+      resize: none;
+      height: 80px;
+    }
+
+    /* Dropdown content */
+    .dropdown {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      z-index: 100;
+      box-sizing: border-box;
+    }
+
+    .dropdown-content div {
+      padding: 12px 15px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .dropdown-content div:hover {
+      background-color: #06C755;
+      color: #fff;
+    }
+
+    /* ===== Button ===== */
+    .btn {
+      width: 100%;
+      max-width: 400px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background-color: #06C755;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #049645;
+    }
+
+    /* ===== Result ===== */
+    #result {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .success { color: green; }
+    .error { color: red; }
+
+    /* ===== Footer ===== */
+    footer {
+      margin-top: 30px;
+      font-size: 0.85rem;
+      color: #666;
+      text-align: center;
+    }
+
+    footer a {
+      color: #3768fa;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+
+  <!-- โลโก้และชื่อบริษัท -->
+  <div class="logo-container">
+    <img src="https://github.com/sekartwork-creator/imgesweb/blob/main/hhljokhd.png?raw=true" alt="โลโก้">
+  </div>
+  
+  <h1>Attendance ID</h1>
+  <div class="login-line">Check in name ID</div>
+
+  <div class="dropdown">
+    <div class="dropdown-btn" id="dropdownBtn">-- เลือกชื่อเจ้าหน้าที่ --</div>
+    <div class="dropdown-content" id="employeeList">
+      <!-- รายชื่อพนักงานจาก GAS -->
+    </div>
+  </div>
+
+  <textarea id="note" placeholder="รายละเอียดเพิ่มเติม"></textarea>
+  <button class="btn" onclick="checkInEmployee()">เช็คชื่อเข้า</button>
+  <div id="result"></div>
+
+  <footer>
+    <div>About Business ID</div>
+    <div>
+      <a href="#">Help</a> |
+      <a href="#">Terms of Use</a>
+    </div>
+  </footer>
+
+  <audio id="successSound" src="https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/new-notification-015-363677.mp3?alt=media&token=74f2ee1e-021a-4306-9d18-fcbe5d06291b"></audio>
+  <audio id="errorSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+
+  <script>
+    const deploymentURL = 'https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec'; // ใส่ URL ของ Web App GAS
+
+    let selectedStaffId = '';
+    let selectedStaffName = '';
+
+    function loadEmployees() {
+      fetch(`${deploymentURL}?action=getEmployees`)
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById('employeeList');
+          list.innerHTML = '';
+          data.forEach(emp => {
+            const div = document.createElement('div');
+            div.textContent = emp.name;
+            div.dataset.id = emp.id;
+            div.dataset.name = emp.name;
+            div.onclick = () => {
+              selectedStaffId = emp.id;
+              selectedStaffName = emp.name;
+              document.getElementById('dropdownBtn').textContent = emp.name;
+              list.style.display = 'none';
+            };
+            list.appendChild(div);
+          });
+        })
+        .catch(err => console.error(err));
+    }
+
+    document.getElementById('dropdownBtn').onclick = () => {
+      const list = document.getElementById('employeeList');
+      list.style.display = list.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function checkInEmployee() {
+      const note = document.getElementById('note').value;
+      const resultDiv = document.getElementById('result');
+
+      if (!selectedStaffId) {
+        resultDiv.textContent = "กรุณาเลือกชื่อก่อน!";
+        resultDiv.className = "error";
+        document.getElementById('errorSound').play();
+        return;
+      }
+
+      fetch(`${deploymentURL}?action=checkIn&name=${encodeURIComponent(selectedStaffName)}&staffId=${encodeURIComponent(selectedStaffId)}&note=${encodeURIComponent(note)}`)
+        .then(res => res.json())
+        .then(response => {
+          resultDiv.textContent = response.msg;
+          resultDiv.className = response.status === "success" ? "success" : "error";
+          if(response.status === "success"){
+            document.getElementById('successSound').play();
+          } else {
+            document.getElementById('errorSound').play();
+          }
+        })
+        .catch(err => console.error(err));
+    }
+
+    // โหลดพนักงานเมื่อหน้าเว็บเปิด
+    loadEmployees();
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
