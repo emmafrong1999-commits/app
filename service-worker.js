@@ -1,4 +1,4 @@
-const CACHE_NAME = 'checkin-cache-v1';
+const CACHE_NAME = 'checkin-cache-v2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -28,6 +28,6 @@ self.addEventListener('activate', event => {
       Promise.all(
         keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
       )
-    )
+    ).then(() => self.clients.claim())
   );
 });
